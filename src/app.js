@@ -9,12 +9,14 @@ const app = express();
 
 app.set("PORT", process.env.PORT || 3000);
 
-app.use(morgan("dev"));
+app
+  .use(morgan("dev"))
+  .use(express.json());
 
 app
   .use("/auth", authRouter)
   .use(homeRouter)
-  .use("/products", productRouter)
+  .use("/product", productRouter)
   .use("/user", userRouter);
 
 export default app;
