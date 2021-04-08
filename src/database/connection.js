@@ -1,45 +1,44 @@
 import { connect, connection } from "mongoose";
 import isOnline from "is-online";
+import { env, exit } from "process";
 
-const { MONGO_USER, MONGO_PASSWORD, MONGO_HOST, MONGO_NAME_DB } = process.env;
+const { MONGO_USER, MONGO_PASSWORD, MONGO_HOST, MONGO_NAME_DB } = env;
 
 const connectionOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false,
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useCreateIndex: true,
+	// useFindAndModify: false,
 };
 
 isOnline().then((isConnected) => {
 
-  let uris = "";
+	let uris = "";
 
-  if (isConnected) {
-    if (MONGO_USER && MONGO_PASSWORD && MONGO_HOST && MONGO_NAME_DB) {
-      uris = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}/${MONGO_NAME_DB}?retryWrites=true&w=majority`;
-    } else {
-      console.log("The required environment variables are undefined.");
-      process.exit(0);
-    }
-  } else {
-    if (MONGO_USER && MONGO_PASSWORD && MONGO_HOST && MONGO_NAME_DB) {
-      uris = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}/${MONGO_NAME_DB}`;
-    } else {
-      uris = "mongodb://localhost/products-api-company";
-    }
-  }
+	if (isConnected) {
+		if (MONGO_USER && MONGO_PASSWORD && MONGO_HOST && MONGO_NAME_DB) {
+			uris = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}/${MONGO_NAME_DB}?retryWrites=true&w=majority`;
+		} else {
+			console.log("The required environment variables are undefined.");
+			exit(0);
+		}
+	} else {
+		if (MONGO_USER && MONGO_PASSWORD && MONGO_HOST && MONGO_NAME_DB) {
+			uris = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}/${MONGO_NAME_DB}`;
+		} else {
+			uris = "mongodb://localhost/products-api-company";
+		}
+	}
 
-  connect(uris, connectionOptions);
+	connect(uris, connectionOptions);
 
-  const conn = connection;
+	const conn = connection;
 
-  conn
-    .once("open", () =>
-      console.log("The connection to the database was established")
-    )
-    .on("error", (error) => {
-      console.log(error);
-      process.exit(0);
-    });
-    
+	conn.once("open", () =>
+		console.log("The connection to the database was established")
+	).on("error", (error) => {
+		console.log(error);
+		exit(0);
+	});
+
 });

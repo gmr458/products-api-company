@@ -3,7 +3,6 @@ import homeController from "../controllers/home.controller";
 
 const router = Router();
 
-router.route("/")
-  .get(homeController);
+router.route("/").get(homeController);
 
 export default router;
