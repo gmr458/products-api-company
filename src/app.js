@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import { createRoles } from "./libs/initialSetup";
 import authRouter from "./routes/auth.routes";
 import homeRouter from "./routes/home.routes";
 import productRouter from "./routes/product.routes";
@@ -7,11 +8,11 @@ import userRouter from "./routes/user.routes";
 import { env } from "process";
 
 const app = express();
+createRoles();
 
 app.set("PORT", env.PORT || 3000);
 
-app.use(morgan("dev"))
-	.use(express.json());
+app.use(morgan("dev")).use(express.json());
 
 app.use(homeRouter)
 	.use("/api/auth", authRouter)
