@@ -1,16 +1,29 @@
 import { Router } from "express";
+import { authJWT } from "../middlewares";
 import * as productControllers from "../controllers/product.controllers";
 
 const router = Router();
 
-router.route("/get-all").get(productControllers.getProducts);
+router.get("/get-all", productControllers.getProducts);
 
-router.route("/create").post(productControllers.createProduct);
+router.post(
+	"/create",
+	[authJWT.verifyToken, authJWT.isAdmin],
+	productControllers.createProduct
+);
 
-router.route("/get/:productId").get(productControllers.getProductByiD);
+router.get("/get/:productId", productControllers.getProductByiD);
 
-router.route("/update/:productId").put(productControllers.updateProductByiD);
+router.put(
+	"/update/:productId",
+	[authJWT.verifyToken, authJWT.isAdmin],
+	productControllers.updateProductByiD
+);
 
-router.route("/delete/:productId").delete(productControllers.deleteProductByiD);
+router.delete(
+	"/delete/:productId",
+	[authJWT.verifyToken, authJWT.isAdmin],
+	productControllers.deleteProductByiD
+);
 
 export default router;

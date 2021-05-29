@@ -12,7 +12,8 @@ createRoles();
 
 app.set("PORT", env.PORT || 3000);
 
-app.use(morgan("dev")).use(express.json());
+app.use(morgan("dev"))
+	.use(express.json());
 
 app.use(homeRouter)
 	.use("/api/auth", authRouter)
